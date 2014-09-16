@@ -1,12 +1,6 @@
 package ryosuke;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -70,35 +64,9 @@ public class cluster extends Configured implements Tool {
 
 		//  job.setPartitionerClass(HashPartitioner.class);
 
-		// hadoop以外の処理をここに記述
-		try {
-			FileReader in = new FileReader("input/graph1.txt");
-			BufferedReader br = new BufferedReader(in);
-			String line;
-			while ((line = br.readLine()) != null) {
-				System.out.println("\n");
-				List<String> str = Arrays.asList(line.split("\t"));
-				Iterator<String> i = str.iterator();
-				while(i.hasNext()){
-					int a = Integer.parseInt((String)i.next());
-					System.out.print(a);
-				}
-			}
-			br.close();
-			in.close();
-		} catch (IOException e) {
-			System.out.println(e);
-		}
-		
-
-
 		// hadoopの処理
 		boolean result = job.waitForCompletion(true);
 
 		return result ? 0 : 1;
 	}
-
-
-
-
 }
