@@ -1,6 +1,7 @@
 package ryosuke;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.hadoop.io.IntWritable;
@@ -18,5 +19,11 @@ public class reducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 			iterator.next();
 		}
 		context.write(key, new IntWritable(count));
+		
+		// クラスター係数の計算
+		String nodeinfo = key.toString();
+		//HashMap a;
+		context.write(key, new IntWritable(count));
+		
 	}
 }
