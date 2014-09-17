@@ -14,7 +14,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-	public String FILENAME = "input/graph1.txt";
+	public String FILENAME = "input/graph2.txt";
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		/*
@@ -30,8 +30,8 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 		*/
 		// hadoop以外の処理をここに記述
 		try{
-			FileReader in = new FileReader(FILENAME);
-			BufferedReader br = new BufferedReader(in);
+			//FileReader in = new FileReader(FILENAME);
+			//BufferedReader br = new BufferedReader(in);
 			String line = value.toString();
 			String[] splitcolon = line.split(":");
 			String nodenum = splitcolon[0];
@@ -50,10 +50,17 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 			//System.out.println(Arrays.toString(edge));
 			//System.out.println(edgeset);
 			
-			while ((line = br.readLine()) != null) {
-				context.write(new Text(nodenum), new IntWritable(1));
+			// 渡すべきリストをくっつける
+			Iterator<String> n = appendnodelist.iterator();
+			while (n.hasNext()) {
+				String appendline = returnline(Integer.parseInt(n.next()));
+				String[] temp = appendline.split(":");
+				String nodeline = temp[1];
+				//System.out.println(nodeline);
+				line = line + "\t" + nodeline;
 			}
-			
+			System.out.println(line);
+			context.write(new Text(nodenum), new IntWritable(1));
 		}catch (IOException e){
 			System.out.println(e);
 		}
@@ -98,7 +105,7 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 			FileReader in = new FileReader(FILENAME);
 			BufferedReader br = new BufferedReader(in);
 			//System.out.println("num: " + num + "in: " + in);
-			for(int i = 0; i <= num; i++){
+			for(int i = 0; i < num; i++){
 				if((line = br.readLine()) == null){
 					break;
 				}
@@ -110,11 +117,12 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 		}
 		
 		// tabを取り除いて出力するものappendinfoを作る
+		/*
 		List<String> str = Arrays.asList(line.split("\t"));
 		Iterator<String> ite = str.iterator();
 		while(ite.hasNext()){
 			appendinfo = appendinfo + ite.next();
-		}
-		return appendinfo;
+		}*/
+		return line;
 	}
 }
