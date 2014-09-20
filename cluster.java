@@ -47,7 +47,7 @@ public class cluster extends Configured implements Tool {
 		FileOutputFormat.setOutputPath(job, new Path(outputDir));
 
 		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(IntWritable.class);
+		job.setMapOutputValueClass(Text.class);
 
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
