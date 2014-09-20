@@ -8,11 +8,11 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class reducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 	@Override
-	protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 		Integer count = 0;
-		Iterator<IntWritable> iterator = values.iterator();
+		Iterator<Text> iterator = values.iterator();
 		while (iterator.hasNext())
 		{
 			count++;

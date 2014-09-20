@@ -13,8 +13,8 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-	public String FILENAME = "input/graph2.txt";
+public class mapper extends Mapper<LongWritable, Text, Text, Text> {
+	public String FILENAME = "input/graph4.txt";
 	@Override
 	protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		/*
@@ -30,8 +30,6 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 		*/
 		// hadoop以外の処理をここに記述
 		try{
-			//FileReader in = new FileReader(FILENAME);
-			//BufferedReader br = new BufferedReader(in);
 			String line = value.toString();
 			String[] splitcolon = line.split(":");
 			String nodenum = splitcolon[0];
@@ -41,7 +39,7 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 			String edgeset = splitcolon[1];
 			List<String> edge = Arrays.asList(edgeset.split("\t"));
 			Iterator<String> i = edge.iterator();
-			ArrayList appendnodelist = new ArrayList<String>();
+			ArrayList<String> appendnodelist = new ArrayList<String>();
 			while(i.hasNext()){
 				String[] splitcamma = i.next().split(",");
 				appendnodelist.add(splitcamma[1]);
@@ -51,16 +49,17 @@ public class mapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 			//System.out.println(edgeset);
 			
 			// 渡すべきリストをくっつける
+			String values = edgeset;
 			Iterator<String> n = appendnodelist.iterator();
 			while (n.hasNext()) {
 				String appendline = returnline(Integer.parseInt(n.next()));
 				String[] temp = appendline.split(":");
 				String nodeline = temp[1];
 				//System.out.println(nodeline);
-				line = line + "\t" + nodeline;
+				values = values + "\t" + nodeline;
 			}
-			System.out.println(line);
-			context.write(new Text(nodenum), new IntWritable(1));
+			System.out.println(values);
+			context.write(new Text(nodenum), new Text(values));
 		}catch (IOException e){
 			System.out.println(e);
 		}
