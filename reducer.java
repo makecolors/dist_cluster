@@ -56,17 +56,33 @@ public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 		
 		// 隣接するノード同士の組み合わせを見つける
 		int trianglecount = 0;
-		List<Edge> a = combi(adjnode);
+		List<Edge> combination = combi(adjnode);
 		
-		Iterator<Edge> xx = a.iterator();
+		/*
+		Iterator<Edge> yy = edges.iterator();
+		while(yy.hasNext()){
+			Edge t = yy.next();
+			System.out.println(t.start + t.end);
+		}
+		System.out.println("=========================");
+		
+		Iterator<Edge> xx = combination.iterator();
 		while(xx.hasNext()){
 			Edge t = xx.next();
 			System.out.println(t.start + t.end);
 		}
 		
-		
-		/*
+		System.out.println("=========================");
+		*/
 		// クラスタ係数の三角形をカウントする
+		for(Edge ed : edges){
+			for(Edge com : combination){
+				if(ed.start.equals(com.start) && ed.end.equals(com.end)){
+					trianglecount++;
+				}
+			}
+		}
+		/*
 		Iterator<Edge> b = edges.iterator();
 		while(b.hasNext()){
 			Iterator<Edge> ite = a.iterator();
@@ -75,8 +91,9 @@ public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 					trianglecount++;
 				}
 			}
-		}
-		
+		}*/
+		System.out.println(key+": "+trianglecount);
+		/*
 		context.write(key, new IntWritable(trianglecount));
 		*/
 	}
