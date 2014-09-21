@@ -6,6 +6,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.IntWritable;
 //import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -50,7 +51,7 @@ public class cluster extends Configured implements Tool {
 		job.setMapOutputValueClass(Text.class);
 
 		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(IntWritable.class);
+		job.setOutputValueClass(FloatWritable.class);
 
 		job.setMapperClass(mapper.class);
 		//  job.setCombinerClass(reducer.class);

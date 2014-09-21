@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.hadoop.io.IntWritable;
+
+import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class reducer extends Reducer<Text, Text, Text, IntWritable> {
+public class reducer extends Reducer<Text, Text, Text, FloatWritable> {
 	static int START = 0, END = 1;
 	@Override
 	protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -56,24 +57,8 @@ public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 		
 		// 隣接するノード同士の組み合わせを見つける
 		int trianglecount = 0;
-		List<Edge> combination = combi(adjnode);
+		List<Edge> combination = combi((LinkedList<String>)adjnode.clone());
 		
-		/*
-		Iterator<Edge> yy = edges.iterator();
-		while(yy.hasNext()){
-			Edge t = yy.next();
-			System.out.println(t.start + t.end);
-		}
-		System.out.println("=========================");
-		
-		Iterator<Edge> xx = combination.iterator();
-		while(xx.hasNext()){
-			Edge t = xx.next();
-			System.out.println(t.start + t.end);
-		}
-		
-		System.out.println("=========================");
-		*/
 		// クラスタ係数の三角形をカウントする
 		for(Edge ed : edges){
 			for(Edge com : combination){
@@ -82,20 +67,15 @@ public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 				}
 			}
 		}
-		/*
-		Iterator<Edge> b = edges.iterator();
-		while(b.hasNext()){
-			Iterator<Edge> ite = a.iterator();
-			while(ite.hasNext()){
-				if(ite.next().start == b.next().start && ite.next().end == b.next().end){
-					trianglecount++;
-				}
-			}
-		}*/
-		System.out.println(key+": "+trianglecount);
-		/*
-		context.write(key, new IntWritable(trianglecount));
-		*/
+		//System.out.println(key+": "+trianglecount);
+		System.out.println("size: "+adjnode.size());
+		float cluster = (float)trianglecount / (adjnode.size()*(adjnode.size()-1)/2);
+		System.out.println(key+": "+trianglecount + ": "+cluster);
+		
+		//System.out.println(adjnode);
+		
+		context.write(key, new FloatWritable(cluster));
+		
 	}
 	private List<Edge> combi(LinkedList<String> adjnode) {
 		List<Edge> combi = new LinkedList<reducer.Edge>();
