@@ -3,10 +3,8 @@ package ryosuke;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -22,9 +20,9 @@ public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 		while (iterator.hasNext())
 		{
 			String value = iterator.next().toString();
-			System.out.println(value);
+			//System.out.println(value);
 			List<String> edge = Arrays.asList(value.split("\t"));
-			System.out.println(Arrays.asList(edge));
+			//System.out.println(Arrays.asList(edge));
 			Iterator<String> i = edge.iterator();
 			while(i.hasNext()){
 				String[] temp = i.next().split(",");
@@ -34,19 +32,34 @@ public class reducer extends Reducer<Text, Text, Text, IntWritable> {
 		
 		// クラスター係数の計算
 		String origin = key.toString();
-		/*
+		
 		// 隣接するノードを調べる
-		List<String> adjnode = null;
+		List<String> adjnode = new ArrayList<String>();
+		List<Edge> otheredges = new ArrayList<Edge>();
 		Iterator<Edge> e = edges.iterator();
-		List<Edge> otheredges = null;
 		while(e.hasNext()){
-			if(e.next().start == origin){
-				adjnode.add(e.next().end);
+			Edge tempe = e.next();
+			//System.out.printf("start: " + tempe.start + "end: " + tempe.end + "\n");
+			//System.out.println(tempe.start);
+			//System.out.println(origin);
+			if(tempe.start.equals(origin)){
+				adjnode.add(tempe.end);
 			}else{
-				otheredges.add(e.next());
+				otheredges.add(tempe);
+				//System.out.printf("start: " + tempe.start + "end: " + tempe.end + "\n");
 			}
 		}
+		//System.out.println(adjnode);
+		//System.out.println(Arrays.asList(otheredges));
+		/*
+		Iterator<Edge> xx = otheredges.iterator();
+		while(xx.hasNext()){
+			Edge t = xx.next();
+			System.out.println(t.start + t.end);
+		}
+		*/
 		
+		/*
 		// 隣接するノード同士の組み合わせを見つける
 		int trianglecount = 0;
 		List<Edge> a = combi(adjnode);
